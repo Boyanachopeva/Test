@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steel Warriors Theory of Change</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<!--
+  HOW TO UPDATE
+  All content comes from the JSON block with id="toc-data" at the bottom of this file.
+  Edit the text there and reload. Values typed into the tracker and ticked actions
+  are saved in this browser only; use "Export CSV" to share the tracker.
+    facts       the "Steel Warriors today" strip (source: steelwarriors.co.uk)
+    nodes       the boxes on the map; "today" holds the specific current facts
+    indicators  the measures; "tier" is core or next; "readiness" is ready | fix | build
+    actions     the plan
+    reconcile   figures that disagree between sources
+-->
+<style>
+:root{
+  --red:#BE1C25; --red-tint:#F6E4E5; --ink:#080809; --ink-2:#1F1F21; --paper:#FAFAF8; --stone:#EBEBE8; --grey:#ACACAC;
+  --bg:var(--paper); --surface:#FFFFFF; --text:var(--ink); --muted:#5C5C60; --line:#DADAD7; --band:#F2F2EF;
+  --edge:#9A9A9E; --edge-dim:#E4E4E1; --ok:#1F6B3A; --ok-tint:#E3F1E8; --warn:#8A5A00; --warn-tint:#FBEFD2;
+  --shadow:0 1px 2px rgba(8,8,9,.08),0 6px 18px rgba(8,8,9,.06); color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#080809; --surface:#1F1F21; --text:#FAFAF8; --muted:#ACACAC; --line:#343437; --band:#111113; --red-tint:#3A1518;
+  --edge:#77777C; --edge-dim:#2A2A2D; --ok:#6FCF97; --ok-tint:#14301F; --warn:#F2C14E; --warn-tint:#3A2E0E; --shadow:none; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#080809; --surface:#1F1F21; --text:#FAFAF8; --muted:#ACACAC; --line:#343437; --band:#111113; --red-tint:#3A1518;
+  --edge:#77777C; --edge-dim:#2A2A2D; --ok:#6FCF97; --ok-tint:#14301F; --warn:#F2C14E; --warn-tint:#3A2E0E; --shadow:none; color-scheme:dark;}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:58px}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 "Noto Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit;color:inherit} button{cursor:pointer}
+a{color:var(--red)}
+.wrap{max-width:1500px;margin:0 auto;padding-inline:max(16px,3vw)}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+
+header.hero{background:var(--ink);color:var(--paper);border-bottom:4px solid var(--red)}
+.hero .wrap{padding-block:30px 26px;display:flex;flex-wrap:wrap;gap:18px 48px;align-items:flex-end;justify-content:space-between}
+.brand{font-weight:800;letter-spacing:.14em;font-size:12px;text-transform:uppercase;color:var(--grey)} .brand b{color:var(--red)}
+h1{margin:8px 0 6px;font-size:clamp(28px,4.4vw,46px);line-height:1.08;font-weight:800;letter-spacing:-.015em}
+h1 em{font-style:normal;color:var(--red)}
+.hero p{margin:0;max-width:66ch;color:#D6D6D3;font-size:16px}
+.tag{font-weight:800;letter-spacing:.16em;font-size:12px;color:var(--grey);text-transform:uppercase}
+.flag{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px dashed var(--red);color:#FF8D93;padding:3px 9px;border-radius:2px}
+
+nav.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;gap:2px;overflow-x:auto}
+nav.top a{padding:13px 14px;font-weight:700;font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent}
+nav.top a:hover{color:var(--text)} nav.top a.on{color:var(--text);border-bottom-color:var(--red)}
+
+.today{background:var(--band);border-bottom:1px solid var(--line)}
+.today .wrap{padding-block:18px 14px}
+.today h2{margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);font-weight:800}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.fact{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:3px;padding:10px 14px}
+.fact b{display:block;font-size:28px;line-height:1.1;font-weight:800}
+.fact span{font-size:13px;color:var(--muted)}
+.src{margin:10px 0 0;font-size:12px;color:var(--muted)}
+
+section.sec{padding-block:42px 26px} section.alt{background:var(--band)}
+.kick{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+h2.h{margin:4px 0 6px;font-size:clamp(22px,3vw,30px);line-height:1.2;font-weight:800;letter-spacing:-.01em}
+.lede{margin:0 0 18px;color:var(--muted);max-width:76ch}
+
+.bar{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;margin:0 0 12px}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.group>.lbl{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.chip{border:1px solid var(--line);background:var(--surface);padding:5px 12px;border-radius:999px;font-size:13px;font-weight:500;transition:.15s}
+.chip:hover{border-color:var(--red)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--red);border-color:var(--red)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{background:var(--red);border-color:var(--red)}}
+
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 0;transition:grid-template-columns .25s ease;align-items:start}
+.stage.open{grid-template-columns:minmax(0,1fr) 380px;gap:20px}
+.scroller{overflow-x:auto;padding:8px 4px}
+.map{position:relative;min-width:1180px}
+svg.edges{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.need{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin-bottom:18px;padding:11px 14px;background:var(--ink);color:var(--paper);border-radius:3px;border-left:6px solid var(--red)}
+.need b{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-right:6px}
+.need span.n{border:1px solid #4a4a4e;border-radius:999px;padding:2px 12px;font-size:13px}
+.cols{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:44px}
+.col h4{margin:0 0 2px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.col h4 span{color:var(--muted);margin-right:6px}
+.col .cs{font-size:12px;color:var(--muted);min-height:34px;margin-bottom:12px;border-bottom:2px solid var(--text);padding-bottom:8px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.node{position:relative;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--grey);border-radius:3px;padding:10px 11px 10px 12px;box-shadow:var(--shadow);transition:opacity .15s,transform .15s,border-color .15s}
+.node:hover{transform:translateY(-1px);border-color:var(--red)}
+.node .t{display:block;font-weight:700;font-size:13.5px;line-height:1.3}
+.node .d{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}
+.node .now{display:block;margin-top:7px;padding-top:6px;border-top:1px dashed var(--line);font-size:12px;font-weight:700;line-height:1.35}
+.node .cov{display:block;margin-top:6px;font-size:11px;font-weight:700;color:var(--muted)}
+.node .cov i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.r0{background:transparent;border:2px dashed var(--red)} .r1{background:var(--grey)} .r2{background:var(--ok)}
+.node.sel{outline:2px solid var(--red);outline-offset:1px;border-color:var(--red)}
+.node.dim{opacity:.22} .node.hide{opacity:.12;filter:grayscale(1)}
+.edge{fill:none;stroke:var(--edge);stroke-width:1.5;opacity:.7;transition:.15s}
+.edge.on{stroke:var(--red);stroke-width:2.6;opacity:1} .edge.dim{stroke:var(--edge-dim);opacity:.6}
+marker path{fill:var(--edge)}
+.under{margin-top:24px;border-top:2px solid var(--text);padding-top:10px}
+.under h4{margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.under .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.enab{text-align:left;background:var(--ink-2);color:var(--paper);border:1px solid var(--ink-2);border-top:4px solid var(--red);border-radius:3px;padding:10px 12px}
+.enab:hover{border-color:var(--red)} .enab.sel{outline:2px solid var(--red);outline-offset:1px}
+.enab .t{display:block;font-weight:700;font-size:13.5px} .enab .d{display:block;font-size:12px;color:#C9C9C6;margin-top:3px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:12px;color:var(--muted);padding:2px 0 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px} .legend i{display:inline-block;width:9px;height:9px;border-radius:50%}
+.notes{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.notice{border-left:5px solid var(--red);background:var(--red-tint);padding:10px 14px;border-radius:2px;font-size:14px}
+
+aside.panel{overflow:hidden;visibility:hidden;position:sticky;top:70px;align-self:start}
+.stage.open aside.panel{visibility:visible}
+.panel-in{width:380px;background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--red);border-radius:3px;box-shadow:var(--shadow);padding:16px 18px 20px;max-height:calc(100vh - 86px);overflow:auto}
+.close{float:right;border:1px solid var(--line);background:none;width:30px;height:30px;border-radius:50%;font-size:16px;line-height:1}
+.close:hover{border-color:var(--red);color:var(--red)}
+.panel h3{font-size:19px;margin:4px 0 6px}
+.panel h5{margin:14px 0 6px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.panel ul{margin:0;padding-left:18px} .panel li{margin:4px 0} .panel p{margin:6px 0 8px}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid var(--line);margin:0 4px 4px 0;white-space:nowrap}
+.pill.core{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+:root[data-theme="dark"] .pill.core{background:var(--red);border-color:var(--red)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill.core{background:var(--red);border-color:var(--red)}}
+.pill.ready{background:var(--ok-tint);border-color:var(--ok);color:var(--ok)}
+.pill.fix{background:var(--warn-tint);border-color:var(--warn);color:var(--warn)}
+.pill.build{background:var(--red-tint);border-color:var(--red);color:var(--red)}
+.linkbtn{background:none;border:0;padding:0;color:var(--red);font-weight:600;text-decoration:underline;text-underline-offset:3px;text-align:left}
+
+.ind{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--grey);border-radius:3px;margin-bottom:10px;box-shadow:var(--shadow)}
+.ind.core{border-left-color:var(--red)}
+.ind-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 18px;align-items:center;padding:10px 14px}
+.ind-head{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;text-align:left;background:none;border:0;padding:0;width:100%}
+.ind-id{font-weight:800;color:var(--red);font-size:13px;min-width:28px} .ind-name{font-weight:700;font-size:15px}
+.ind-caret{margin-left:auto;font-size:12px;color:var(--muted)}
+.vals{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:flex-end}
+.vals label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.vals input{width:92px;padding:6px 8px;border:1px solid var(--line);border-radius:3px;background:var(--bg)}
+.vals .unit{font-size:12px;color:var(--muted);padding-bottom:7px}
+.rag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding-bottom:6px;min-width:96px}
+.rag i{width:14px;height:14px;border-radius:50%;border:2px solid var(--grey)}
+.rag.g i{background:var(--ok);border-color:var(--ok)} .rag.a i{background:#E0A526;border-color:#E0A526} .rag.r i{background:var(--red);border-color:var(--red)}
+.ind-body{border-top:1px solid var(--line);padding:12px 14px 14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 24px;margin:0}
+.ind-body[hidden]{display:none}
+.ind-body dt{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ind-body dd{margin:2px 0 0} .ind-body .wide{grid-column:1/-1}
+.toolbar-r{display:flex;gap:8px;margin-left:auto}
+.btn{border:1px solid var(--text);background:var(--surface);padding:6px 14px;border-radius:3px;font-weight:700;font-size:13px}
+.btn:hover{background:var(--ink);color:var(--paper)} .btn.quiet{border-color:var(--line);font-weight:500}
+.dom-h{margin:20px 0 8px;display:flex;align-items:baseline;gap:10px} .dom-h h3{margin:0;font-size:17px} .dom-h span{font-size:13px;color:var(--muted)}
+.count{font-size:13px;color:var(--muted);margin:2px 0 8px}
+
+.session{display:grid;grid-template-columns:1fr 2fr 1fr;border-radius:3px;overflow:hidden;border:1px solid var(--line);margin:0 0 22px}
+.session>div{padding:13px 16px;background:var(--surface)} .session>div:nth-child(2){background:var(--ink);color:var(--paper)}
+.session b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--red)} .session>div:nth-child(2) b{color:#FF8D93}
+.session .big{font-size:20px;font-weight:800;display:block;margin:2px 0}
+.phase{margin:0 0 20px} .phase h3{margin:0 0 2px;font-size:17px} .phase .ph{font-size:13px;color:var(--muted);margin-bottom:8px}
+.act{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:10px 14px;margin-bottom:8px}
+.act input[type=checkbox]{width:20px;height:20px;margin-top:3px;accent-color:var(--red)}
+.act.done .at{text-decoration:line-through;color:var(--muted)}
+.act .at{font-weight:600} .act .am{display:block;font-size:13px;color:var(--muted)}
+.act .ad{font-size:12px;font-weight:700;text-align:right;white-space:nowrap} .act .ad small{display:block;font-weight:500;color:var(--muted)}
+.prog{min-width:260px;padding:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:3px;font-size:13px}
+.track{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--stone);margin-top:6px}
+:root[data-theme="dark"] .track{background:#343437}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .track{background:#343437}}
+.track i{display:block;height:100%;background:var(--ok)}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface);margin-bottom:22px}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th{background:var(--ink);color:var(--paper);text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 12px}
+td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top;font-size:14px} tr:hover td{background:var(--red-tint)} td.m{color:var(--muted)}
+h3.sub{margin:22px 0 10px;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:12px;color:var(--muted)}
+
+@media (max-width:900px){
+  .stage,.stage.open{grid-template-columns:minmax(0,1fr)} .map{min-width:0}
+  .cols{grid-template-columns:1fr;row-gap:22px} svg.edges,.hide-narrow{display:none}
+  aside.panel{position:static} .panel-in{width:auto;max-height:none} .stage:not(.open) aside.panel{display:none}
+  .ind-row{grid-template-columns:1fr} .session{grid-template-columns:1fr}
+  .act{grid-template-columns:auto 1fr} .act .ad{grid-column:2;text-align:left}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{nav.top,.bar,aside.panel{display:none!important}.scroller{overflow:visible}.ind-body[hidden]{display:grid!important}header.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <div class="brand">Baringa <b>x</b> Steel Warriors</div>
+    <h1>Theory of change: <em>how every session adds up</em></h1>
+    <p id="purpose"></p>
+    <span class="flag">Working draft &middot; to be validated with Steel Warriors</span>
+  </div>
+  <div class="tag">Put down. Pull up.</div>
+</div></header>
+
+<nav class="top" aria-label="Sections"><div class="wrap" id="nav"></div></nav>
+
+<div class="today"><div class="wrap">
+  <h2>Steel Warriors today</h2>
+  <div class="facts" id="facts"></div>
+  <p class="src" id="factsrc"></p>
+</div></div>
+
+<section class="sec" id="map"><div class="wrap">
+  <div class="kick">The change</div>
+  <h2 class="h">From a free gym to a safer community</h2>
+  <p class="lede">Read left to right: what goes in, what Steel Warriors does, what is delivered, and the change that should follow. Bold lines show where Steel Warriors is today. The dot shows whether a step can be measured yet.</p>
+  <div class="bar">
+    <div class="group" id="progFilters"><span class="lbl">Programme</span></div>
+    <div class="group" id="outFilters"><span class="lbl">Outcome</span></div>
+  </div>
+  <div class="stage" id="stage">
+   <div>
+    <div class="legend">
+      <span><i style="background:var(--ok)"></i>Measured</span>
+      <span><i style="background:var(--grey)"></i>Partly measurable</span>
+      <span><i style="border:2px dashed var(--red)"></i>Not yet measurable</span>
+      <span class="hide-narrow">Hover to trace a chain. Click for detail.</span>
+    </div>
+    <div class="scroller"><div class="map" id="mapEl">
+      <svg class="edges" id="edges" aria-hidden="true"></svg>
+      <div class="need" id="need"></div>
+      <div class="cols" id="cols"></div>
+      <div class="under"><h4>Underpinning every stage</h4><div class="row" id="enab"></div></div>
+    </div></div>
+   </div>
+   <aside class="panel" id="panel" aria-live="polite"><div class="panel-in" id="panelIn"></div></aside>
+  </div>
+  <div class="notes"><div class="notice" id="how"></div><div class="notice" id="caveat"></div></div>
+</div></section>
+
+<section class="sec alt" id="measures"><div class="wrap">
+  <div class="kick">The tracker</div>
+  <h2 class="h">What we will measure</h2>
+  <p class="lede">Start with the 12 core measures. Each has one definition, one source and one owner. Type a current value and a target and the traffic light updates. Entries are saved in this browser.</p>
+  <div class="bar">
+    <div class="group" id="scopeFilters"></div>
+    <div class="toolbar-r"><button class="btn" type="button" id="exportCsv">Export CSV</button><button class="btn quiet" type="button" id="resetVals">Clear my entries</button></div>
+  </div>
+  <div class="count" id="indCount"></div>
+  <div id="inds"></div>
+</div></section>
+
+<section class="sec" id="plan"><div class="wrap">
+  <div class="kick">Routine and plan</div>
+  <h2 class="h">What happens in a session, and what happens next</h2>
+  <p class="lede">The daily routine uses time sessions already have. The plan is in order; tick actions off as they finish. An asterisk means the owner is proposed.</p>
+  <div class="session" id="session"></div>
+  <div class="bar">
+    <div class="group" id="ownFilters"><span class="lbl">Owner</span></div>
+    <div class="prog"><span id="actTxt"></span><div class="track"><i id="actBar" style="width:0"></i></div></div>
+  </div>
+  <div id="acts"></div>
+</div></section>
+
+<section class="sec alt" id="gaps"><div class="wrap">
+  <div class="kick">Making it honest</div>
+  <h2 class="h">Figures to reconcile, and what has to be true</h2>
+  <p class="lede">Sources disagree in places. Agree one figure and one written calculation for each before anything is published.</p>
+  <div class="tw"><table id="tblRec"></table></div>
+  <h3 class="sub">What has to be true</h3>
+  <div class="tw"><table id="tblAssump"></table></div>
+  <p class="src" id="themes"></p>
+</div></section>
+
+<footer><div class="wrap" id="foot"></div></footer>
+
+<script id="toc-data" type="application/json">
+{
+ "purpose":"Free calisthenics gyms, built from surrendered knives, that give young people and communities a place to build trust, belonging, wellbeing and a route to work. One consistent set of outcomes for funding applications, impact reports, Board reporting and programme evaluation.",
+
+ "facts":[
+  {"n":"6","t":"gyms: five parks with public classes plus HMP Brixton"},
+  {"n":"20","t":"free sessions a week: four in each of five parks"},
+  {"n":"694","t":"sessions delivered in 2025: 293 community, 401 targeted"},
+  {"n":"20,000+","t":"young people supported since 2017"}
+ ],
+ "factsrc":"Source: steelwarriors.co.uk (home, classes, impact and programmes pages). The home page headline also says 7 gyms built; see Figures to reconcile.",
+
+ "need":["Youth violence","Exclusion and inequality","Poor wellbeing","Limited opportunity"],
+
+ "outcomes":[
+  {"id":"O1","title":"Better physical and mental wellbeing","chip":"Wellbeing"},
+  {"id":"O2","title":"More confidence and resilience","chip":"Confidence"},
+  {"id":"O3","title":"Stronger relationships and belonging","chip":"Belonging"},
+  {"id":"O4","title":"Reduced vulnerability to violence and exploitation","chip":"Safety from violence"},
+  {"id":"O5","title":"Better skills and employment opportunities","chip":"Skills and work"},
+  {"id":"O6","title":"Stronger, safer, more inclusive communities","chip":"Communities"}
+ ],
+
+ "programmes":[
+  {"id":"community","label":"Built of Steel (community)"},
+  {"id":"future","label":"Future Warriors"},
+  {"id":"sisters","label":"Steel Sisters and Beyond Barriers"},
+  {"id":"made","label":"Made of Steel"},
+  {"id":"specialist","label":"Steel Connections and Beyond Bars"},
+  {"id":"schools","label":"Schools and Steel in Motion"}
+ ],
+
+ "stages":[
+  {"id":"inp","label":"Inputs","sub":"What enables delivery"},
+  {"id":"act","label":"Activities","sub":"What Steel Warriors does"},
+  {"id":"out","label":"Outputs","sub":"What is delivered"},
+  {"id":"stm","label":"Short-term outcomes","sub":"Early changes"},
+  {"id":"mid","label":"Medium-term outcomes","sub":"Changes that last"},
+  {"id":"lng","label":"Long-term impact","sub":"Wider social change"}
+ ],
+
+ "nodes":[
+  {"id":"i1","stage":"inp","title":"Free gyms in parks","short":"Safe, open, built from surrendered knives","outcomes":["O1","O6"],"programmes":["community","future","sisters","schools"],
+   "today":"6 gyms, free all day",
+   "facts":["Langdon Park (Tower Hamlets), opened 2017","Ruskin Park (Lambeth), 2019","Finsbury Park (Haringey), 2019","HMP Brixton, 2020, no public access","Carpenters Estate, Stratford (Newham), 2025","Pymmes Park (Enfield), 2026"],
+   "desc":"Gyms built from steel melted down from collected knives, free to use. Westminster is planned and a West Midlands expansion is in development.","source":"steelwarriors.co.uk; Growth, Impact and Progression 2026; briefing pack"},
+  {"id":"i2","stage":"inp","title":"Trusted coaches and staff","short":"Qualified, consistent, safeguarding-trained","outcomes":["O2","O3","O4"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"Coaches who turn up consistently. Consistency is what lets trust build. Coach numbers and qualifications still need confirming.","source":"Expanded ToC model"},
+  {"id":"i3","stage":"inp","title":"Funders and partners","short":"About 30 grants, colleges, schools, housing and prison partners","outcomes":["O5","O6"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"Most grants are restricted to specific outcomes. Partners host sessions, provide work experience and co-capture social value.","source":"Briefing pack; interview"},
+
+  {"id":"a1","stage":"act","title":"Free community classes","short":"Built of Steel: open to all ages and levels","outcomes":["O1","O3","O6"],"programmes":["community"],
+   "today":"13 sessions a week in 5 parks",
+   "desc":"Qualified coaches run progressive calisthenics where everyone starts at their own level. Often the first way in. Each session starts with a park safety check and ends with registers and new registrations.","source":"steelwarriors.co.uk (classes, programmes); interview"},
+  {"id":"a2","stage":"act","title":"Targeted youth programmes","short":"Future Warriors, Steel Sisters, Beyond Barriers, Steel in Schools, Steel in Motion","outcomes":["O2","O3","O4"],"programmes":["future","sisters","schools"],
+   "today":"7 sessions a week: Future Warriors 5, Steel Sisters 1, Beyond Barriers 1",
+   "desc":"Calisthenics with mentoring for teens (Future Warriors), sessions for women and girls (Steel Sisters), inclusive sessions for children and young people with SEND (Beyond Barriers), and sessions in schools, colleges and alternative provision (Steel in Schools). Steel in Motion mixes dance, creative movement and calisthenics. Steel in Schools and Steel in Motion are not on the weekly timetable.","source":"steelwarriors.co.uk (classes, programmes)"},
+  {"id":"a3","stage":"act","title":"Made of Steel employability pathway","short":"Steel Works, Steel Futures, Steel Assistants","outcomes":["O2","O5"],"programmes":["made"],
+   "today":"3 stages: skills, qualification, paid coaching",
+   "desc":"Stage one, Steel Works: sport with mentoring, career guidance, CVs, interview practice and goal setting. Stage two, Steel Futures: recognised qualifications and paid work experience. Stage three, Steel Assistants: paid coaching alongside qualified coaches.","source":"steelwarriors.co.uk (programmes)"},
+  {"id":"a4","stage":"act","title":"Specialist support and leadership","short":"Steel Connections, Beyond Bars, Youth Leadership and Youth Voice","outcomes":["O2","O4","O5"],"programmes":["specialist","made"],
+   "today":"Specialist mentoring, prison gym, paid Youth Voice roles",
+   "desc":"Steel Connections: trust-building then personalised mentoring for young people at highest risk of violence, exploitation or dropping out of education. Beyond Bars: structured training and qualifications inside HMP Brixton. Youth Leadership and Youth Voice: young people as ambassadors, role models and in paid roles.","source":"steelwarriors.co.uk (programmes)"},
+
+  {"id":"o1","stage":"out","title":"Sessions delivered","short":"Free sessions, community and targeted","outcomes":["O1","O3","O6"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "today":"2025: 694 sessions (293 community, 401 targeted); 20 a week now",
+   "facts":["Community classes rated 9.5 out of 10 on average in 2025"],
+   "desc":"Sessions run, by site and programme. Four sessions on the current timetable are marked new, so the 2025 total reflects fewer weekly sessions than today.","source":"steelwarriors.co.uk (classes, impact)"},
+  {"id":"o2","stage":"out","title":"People reached","short":"Unique participants, attendance, repeat participation","outcomes":["O1","O3","O6"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "today":"20,000+ since 2017. 2025 registered: 43% under 18, 19% aged 18 to 25, 36% female",
+   "desc":"Who comes and how often. Attendance shows participation, not impact. One person can currently be counted in more than one programme.","source":"steelwarriors.co.uk (impact); interview"},
+  {"id":"o3","stage":"out","title":"Progress through the pathway","short":"Starts, completions, leadership roles, referrals","outcomes":["O5"],"programmes":["future","made","specialist"],
+   "today":"11 completed the Level 2 Gym Instructor qualification",
+   "desc":"Young people moving through defined stages: starting, completing, and stepping into paid or leadership roles.","source":"Growth, Impact and Progression 2026"},
+
+  {"id":"s1","stage":"stm","title":"Safety and trust","short":"Feel welcomed, safe and able to trust their coach","outcomes":["O3","O4","O6"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"Participants feel safe in the park, welcome in the group and able to trust a coach. Winter evenings and poor lighting affect this, especially for women.","source":"Expanded ToC model; interview"},
+  {"id":"s2","stage":"stm","title":"Confidence and wellbeing","short":"Confidence, self-esteem, resilience, motivation","outcomes":["O1","O2"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"Early gains in confidence, self-esteem, resilience and motivation.","source":"Expanded ToC model"},
+  {"id":"s3","stage":"stm","title":"Belonging and positive choices","short":"Positive peers, a constructive routine","outcomes":["O3"],"programmes":["community","future","sisters","schools"],
+   "desc":"Positive peer connection and a constructive weekly routine.","source":"Expanded ToC model"},
+
+  {"id":"m1","stage":"mid","title":"Sustained wellbeing","short":"Continued activity, better physical and mental health","outcomes":["O1","O2"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"Participants keep up healthy activity and report lasting improvement in how they feel.","source":"Expanded ToC model"},
+  {"id":"m2","stage":"mid","title":"Stronger relationships","short":"Supportive peer and community ties","outcomes":["O3","O4"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"More supportive ties with peers and the wider community, and continued engagement in positive activities.","source":"Expanded ToC model"},
+  {"id":"m3","stage":"mid","title":"Skills and progression","short":"Qualifications, experience, ready for work or training","outcomes":["O5"],"programmes":["future","made","specialist"],
+   "desc":"Recognised qualifications, real work experience and clear pathways into education, training or employment.","source":"Expanded ToC model"},
+
+  {"id":"l1","stage":"lng","title":"Healthier, more connected lives","short":"Wellbeing, aspiration, belonging","outcomes":["O1","O6"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "desc":"Stronger long-term wellbeing, aspirations and sense of belonging.","source":"Expanded ToC model"},
+  {"id":"l2","stage":"lng","title":"Safer, more inclusive communities","short":"Less exclusion, risky behaviour and youth violence","outcomes":["O4","O6"],"programmes":["community","future","sisters","made","specialist","schools"],
+   "today":"Estimated social value per gym: 160k pounds in year one, 700k over ten years",
+   "desc":"A contribution to reducing exclusion, risky behaviour and youth violence. A sense of belonging and trusted relationships underpin much of gang involvement, which is why they sit at the centre of this model. Social value figures are estimates using the National TOMs framework.","source":"steelwarriors.co.uk (impact); Expanded ToC model; interview"},
+  {"id":"l3","stage":"lng","title":"Better life chances","short":"Attainment, work, less youth justice contact","outcomes":["O5"],"programmes":["future","made","specialist"],
+   "desc":"Improved education and training attainment, better employment prospects and reduced involvement with youth justice.","source":"Expanded ToC model"}
+ ],
+
+ "edges":[
+  ["i1","a1"],["i2","a1"],["i2","a2"],["i2","a4"],["i3","a3"],["i3","a4"],
+  ["a1","o1"],["a2","o1"],["a3","o1"],["a4","o1"],["a1","o2"],["a2","o2"],["a3","o3"],["a4","o3"],
+  ["o1","s1"],["o2","s3"],["o1","s2"],["o3","s2"],["s1","s2"],
+  ["s1","m2"],["s3","m2"],["s2","m1"],["s2","m3"],["o3","m3"],
+  ["m1","l1"],["m2","l1"],["m2","l2"],["m3","l3"],["m1","l3"]
+ ],
+
+ "enablers":[
+  {"id":"e1","title":"Safeguarding and consent","short":"Emergency contacts, consent, park safety checks",
+   "desc":"Under 16s need a parent or guardian signature for photos and media; 16 to 18 can consent themselves. Emergency contact details are needed for under 18s. Parks are checked before sessions and classes are cancelled in extreme heat.","source":"Interview"},
+  {"id":"e2","title":"Data and learning","short":"Upshot, Jotform, Airtable: one place to see results",
+   "desc":"Data sits across Upshot, Jotform and Airtable with no consolidated view. The goal is one live view of attendance, outstanding registers and report deadlines. Each coach also submits a monthly case study.","source":"Interview; follow-up call"},
+  {"id":"e3","title":"Strengths-based, trauma-informed practice","short":"Participant voice, safe stories, youth-centred",
+   "desc":"Case studies and programme design are strengths-based, trauma-informed and youth-centred, with informed consent before any story is shared.","source":"MEL Approach (March 2025)"}
+ ],
+
+ "how":"How we evidence change: reach and repeat engagement; participant-reported safety, trust and belonging; before and after wellbeing where feasible; progression outcomes; coach and partner case studies. We also track how many people respond.",
+ "caveat":"Attendance shows participation, not impact. Long-term impacts are intended contributions, not outcomes Steel Warriors can claim alone.",
+
+ "domains":[
+  {"id":"reach","label":"Reach"},{"id":"engagement","label":"Engagement"},{"id":"development","label":"Personal development"},
+  {"id":"safety","label":"Safety"},{"id":"progression","label":"Progression"},{"id":"community","label":"Community impact"}
+ ],
+
+ "roles":[
+  {"id":"coach","label":"Coach"},{"id":"manager","label":"Programmes and Delivery Manager"},{"id":"ceo","label":"Interim CEO"},
+  {"id":"comms","label":"Communications and case studies"},{"id":"data","label":"Expansion and data platforms"},{"id":"baringa","label":"Baringa team"}
+ ],
+
+ "indicators":[
+  {"id":"R1","domain":"reach","name":"Unique participants","tier":"core","readiness":"fix","unit":"people","direction":"up",
+   "why":"Funders ask how many people took part. One person can currently be counted in more than one programme.",
+   "definition":"Different people who attended at least one session in the period, counted once across all sites and programmes.",
+   "source":"Upshot registers","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"20,000+ supported since 2017 (cumulative, website). Annual figure not agreed: 1,200 (impact deck); about 1,000 a year and about 500 on Upshot (briefing pack).",
+   "proposal":"Agree the definition first, then set each site's target from its funded plan.","outcomes":["O1","O3","O6"],"nodes":["o2"]},
+  {"id":"R3","domain":"reach","name":"Participants with demographics recorded","tier":"core","readiness":"build","unit":"%","direction":"up",
+   "why":"Without it Steel Warriors cannot show it reaches people left out of mainstream sport, or which boroughs participants travel from.",
+   "definition":"Share of participants with age, gender, ethnicity and home postcode recorded.",
+   "source":"Registration form (QR self-registration)","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"Website, 2025 registered: 43% under 18, 19% aged 18 to 25, 36% female; the other 38% of ages is not explained. Interview: most records hold name and date of birth only; about 80% miss at least one of age, race or gender.",
+   "proposal":"Aim for 80% of new registrations complete. Make fields required gradually so coaches are not overwhelmed.","outcomes":["O3","O6"],"nodes":["o2","e1","e2"]},
+
+  {"id":"E1","domain":"engagement","name":"Sessions delivered against timetable","tier":"core","readiness":"ready","unit":"%","direction":"up",
+   "why":"Shows that what was promised to funders is being delivered.",
+   "definition":"Sessions that ran divided by sessions on the timetable, by site and programme. Cancellations carry a reason such as heat or weather.",
+   "source":"Upshot registers","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"Timetable: 20 free sessions a week, four in each of five parks. 2025: 694 sessions delivered (293 community, 401 targeted).",
+   "proposal":"Report monthly from the next full month.","outcomes":["O6"],"nodes":["o1","a1"]},
+  {"id":"E2","domain":"engagement","name":"Attendance by gym","tier":"core","readiness":"fix","unit":"attendances","direction":"up",
+   "why":"Lets Steel Warriors see which gyms are well attended and ask why some work better than others.",
+   "definition":"Total attendances and average per session for each gym, shown as a traffic light against that gym's target.",
+   "source":"Upshot registers","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"Data exists but is incomplete where registers are late or missing. Not yet reported by gym.",
+   "proposal":"Show on one live dashboard so the Board and coaches see the same view.","outcomes":["O1","O6"],"nodes":["o1","o2"]},
+  {"id":"E4","domain":"engagement","name":"Registers completed on time","tier":"core","readiness":"fix","unit":"%","direction":"up",
+   "why":"Every other attendance figure depends on this one.",
+   "definition":"Sessions with the register and new registrations completed within the 15 minutes after the session, divided by sessions delivered.",
+   "source":"Upshot","collector":"coach","owner":"manager","frequency":"Weekly",
+   "baseline":"Improved since paid administration time was introduced. Remaining gaps are mostly about routine, not the system.",
+   "proposal":"Aim for 95% of sessions. Review weekly in the team meeting.","outcomes":["O6"],"nodes":["o2","e2"]},
+  {"id":"E3","domain":"engagement","name":"Repeat participation","tier":"next","readiness":"build","unit":"%","direction":"up",
+   "why":"Repeat attendance is the best early sign that relationships and routine are forming.",
+   "definition":"Share of participants who attend again the following month. A regular participant is defined once agreed, for example three or more sessions in a month.",
+   "source":"Upshot registers (needs a participant ID)","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"Not measured. Drop-in community classes are not tracked person by person.",
+   "proposal":"Define 'regular' with the Programmes and Delivery Manager, then report monthly.","outcomes":["O3"],"nodes":["o2","s3","m1","m2"]},
+  {"id":"E5","domain":"engagement","name":"Session rating","tier":"next","readiness":"ready","unit":"out of 10","direction":"up",
+   "why":"A simple signal that sessions are welcoming and worth coming back to.",
+   "definition":"Average participant rating of free community classes, by gym.",
+   "source":"Participant rating","collector":"coach","owner":"manager","frequency":"Quarterly",
+   "baseline":"9.5 out of 10 average for free community classes in 2025 (website). Not reported by gym.",
+   "proposal":"Report by gym each quarter.","outcomes":["O3","O6"],"nodes":["o1","s1"]},
+
+  {"id":"P1","domain":"development","name":"Confidence before and after","tier":"core","readiness":"build","unit":"points (1 to 10)","direction":"up",
+   "why":"Shows change in confidence, the first outcome in the pathway, in a form funders recognise.",
+   "definition":"Self-rated confidence from 1 to 10 at the start and end of a programme or stage, matched to the same person.",
+   "source":"Jotform before and after form (QR code)","collector":"coach","owner":"manager","frequency":"Per programme stage",
+   "baseline":"Used in one programme only so far, with no baseline to compare against.",
+   "proposal":"Use the same two questions for every targeted programme. Keep it to a minute.","outcomes":["O1","O2"],"nodes":["s2"]},
+  {"id":"P2","domain":"development","name":"Wellbeing pulse","tier":"core","readiness":"build","unit":"points (1 to 10)","direction":"up",
+   "why":"Wellbeing is hard to measure. A short repeated rating is realistic with the tools the team has now.",
+   "definition":"A one-tap rating of how participants feel, collected monthly and linked to a participant ID. Community groups get a quarterly version by email.",
+   "source":"Jotform (QR code); email survey for community groups","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"No consistent wellbeing measure today. A winter park survey drew about 45 responses.",
+   "proposal":"Pilot at one gym, then roll out. Reuse the adapted wellbeing questions already tested with young people.","outcomes":["O1","O2"],"nodes":["s2","m1"]},
+  {"id":"P3","domain":"development","name":"Trust and belonging","tier":"next","readiness":"fix","unit":"% agree","direction":"up",
+   "why":"Trust and belonging are the centre of the model: they protect young people from gang involvement.",
+   "definition":"Share agreeing: I feel welcome here; I feel safe here; I have built positive relationships with adults and with other young people here.",
+   "source":"Adapted wellbeing survey; annual classes survey","collector":"coach","owner":"manager","frequency":"Quarterly",
+   "baseline":"Questions exist in the adapted survey but are not collected consistently.",
+   "proposal":"Fold into the quarterly community survey.","outcomes":["O3","O4"],"nodes":["s1","s3","m2"]},
+  {"id":"P4","domain":"development","name":"Coach case studies","tier":"next","readiness":"fix","unit":"case studies","direction":"up",
+   "why":"Stories give funders the human evidence behind the numbers.",
+   "definition":"Case studies submitted each month, tagged to programme, site and outcome, with the young person's consent recorded.",
+   "source":"Coach submissions","collector":"coach","owner":"comms","frequency":"Monthly",
+   "baseline":"One case study per coach per month is now a coach KPI. Observations are not recorded in a consistent place.",
+   "proposal":"Use a standard template with an approval checklist.","outcomes":["O2","O3","O4"],"nodes":["e3","e2"]},
+
+  {"id":"S1","domain":"safety","name":"Park safety checks completed","tier":"core","readiness":"ready","unit":"%","direction":"up",
+   "why":"Lets Steel Warriors tell communities their parks are checked several times a week, which did not happen before.",
+   "definition":"Sessions with a completed pre-session park safety check divided by sessions delivered.",
+   "source":"Jotform pre-session form","collector":"coach","owner":"manager","frequency":"Every session",
+   "baseline":"Checks are new: about 101 forms submitted since they began.","proposal":"Aim for 100% of sessions.","outcomes":["O6"],"nodes":["a1","s1","e1"]},
+  {"id":"S2","domain":"safety","name":"Days from hazard report to fix","tier":"core","readiness":"ready","unit":"days","direction":"down",
+   "why":"Safe equipment is a condition of trust. Slow repairs undermine it.",
+   "definition":"Days between a hazard first being reported on the safety check and it being fixed, by gym.",
+   "source":"Jotform comments","collector":"coach","owner":"ceo","frequency":"Weekly",
+   "baseline":"About 6 to 7 weeks for some repairs; a broken bar at one park had been open about 7 weeks at the time of interview.",
+   "proposal":"Agree a maximum, such as 14 days, and escalate anything older.","outcomes":["O6"],"nodes":["s1","a1"]},
+  {"id":"S4","domain":"safety","name":"Under-18s with consent and emergency contact on file","tier":"core","readiness":"build","unit":"%","direction":"up",
+   "why":"A safeguarding requirement as well as a data requirement.",
+   "definition":"Participants under 18 with an emergency contact and, where media is used, the right consent recorded (parent or guardian for under 16s).",
+   "source":"Registration form; photography and filming consent form","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"Emergency contacts were not collected before the recent registration form. Some participants resist giving next of kin details.",
+   "proposal":"Explain why it is needed. Under 18s do not take part without it.","outcomes":["O4","O6"],"nodes":["e1","s1"]},
+  {"id":"S3","domain":"safety","name":"Incidents reported","tier":"next","readiness":"fix","unit":"incidents","direction":"down",
+   "why":"An early warning that shows safeguarding is working.",
+   "definition":"Incidents reported in sessions and through the community incident form, by type and site.",
+   "source":"Jotform incident form; Upshot notes","collector":"coach","owner":"manager","frequency":"Monthly",
+   "baseline":"Form exists. Not yet reported as a trend.","proposal":"Report monthly with the safety checks.","outcomes":["O4","O6"],"nodes":["s1"]},
+
+  {"id":"G1","domain":"progression","name":"Employability starts and completions","tier":"core","readiness":"fix","unit":"people","direction":"up",
+   "why":"Shows whether the three-stage pathway keeps people moving.",
+   "definition":"People starting and completing each stage: Steel Works, Steel Futures and Steel Assistants.",
+   "source":"Programme records","collector":"manager","owner":"manager","frequency":"Per programme stage",
+   "baseline":"Reported: 11 young people completed the Level 2 Gym Instructor qualification.",
+   "proposal":"Record starts as well as completions so completion rates can be calculated.","outcomes":["O5"],"nodes":["o3"]},
+  {"id":"G2","domain":"progression","name":"Qualification success rate","tier":"next","readiness":"fix","unit":"%","direction":"up",
+   "why":"An externally quoted figure needs a calculation anyone can check.",
+   "definition":"People who passed divided by people who started, for a named cohort. Both numbers shown.",
+   "source":"Course records","collector":"manager","owner":"manager","frequency":"Per programme stage",
+   "baseline":"Reported as 98%. No written calculation yet.","proposal":"Document numerator, denominator and cohort before using the figure again.","outcomes":["O5"],"nodes":["o3","m3"]},
+  {"id":"G3","domain":"progression","name":"Destinations after the programme","tier":"next","readiness":"build","unit":"% in work, education or training","direction":"up",
+   "why":"The clearest evidence of progression and of life chances.",
+   "definition":"Share of completers in work, education, training or a Steel Assistant role at 3 and 6 months.",
+   "source":"Follow-up call or message to completers","collector":"manager","owner":"manager","frequency":"Quarterly",
+   "baseline":"Not tracked.","proposal":"Start with Steel Futures completers; the group is small enough to follow personally.","outcomes":["O5"],"nodes":["m3","l3"]},
+
+  {"id":"C1","domain":"community","name":"Community survey: feel safe and welcome","tier":"core","readiness":"fix","unit":"% agree","direction":"up",
+   "why":"Community classes are drop-in, so a seasonal survey is the realistic way to hear from the whole community.",
+   "definition":"Share of community class participants agreeing the park feels safe and welcoming, from a seasonal survey sent to everyone with an email address.",
+   "source":"Jotform seasonal survey","collector":"comms","owner":"manager","frequency":"Quarterly",
+   "baseline":"A winter survey drew about 45 responses, mainly on park use, timing and safety after dark.",
+   "proposal":"Repeat each season with a small fixed set of questions so results can be compared.","outcomes":["O6","O1"],"nodes":["l2","l1"]},
+  {"id":"C3","domain":"community","name":"Partner feedback","tier":"next","readiness":"ready","unit":"score (1 to 5)","direction":"up",
+   "why":"Third-party feedback is credible evidence for funders.",
+   "definition":"Average partner rating after outreach and taster sessions, plus whether they would work with Steel Warriors again.",
+   "source":"Outreach and taster feedback form","collector":"coach","owner":"comms","frequency":"Per event",
+   "baseline":"Form in use. Two submissions so far; at one college taster, 28 of 30 young people were new to calisthenics.",
+   "proposal":"Send to every partner after each session.","outcomes":["O6"],"nodes":["s1","l2"]}
+ ],
+
+ "session":{"before":{"t":"15 minutes before","d":"Park safety check on the form. Report anything broken."},"during":{"t":"The session","d":"Coach the group. Notice who is new, who is quiet, who has changed."},"after":{"t":"15 minutes after","d":"Complete the register, register anyone new, add a short note on what you noticed."}},
+
+ "phases":[
+  {"id":"now","label":"Now: before the midpoint review","d":"What the next two weeks depend on"},
+  {"id":"handover","label":"By handover","d":"What the engagement delivers"},
+  {"id":"feb","label":"Before the Upshot contract ends","d":"Decisions with a deadline"},
+  {"id":"later","label":"Next three to six months","d":"Building the habit"}
+ ],
+
+ "actions":[
+  {"id":"a01","phase":"now","title":"Send the revised Theory of Change working notes","owner":"manager","due":"Before 28 Oct","note":"Needed to finalise the map."},
+  {"id":"a02","phase":"now","title":"Sign the NDA so Jotform and Upshot data can be shared","owner":"ceo","ownerProposed":true,"due":"This week","note":"Airtable access is in place. Data sharing waits on this."},
+  {"id":"a03","phase":"now","title":"Review the core measures and send written feedback","owner":"manager","due":"By 28 Oct","note":"The Interim CEO and Communications lead also review."},
+  {"id":"a04","phase":"now","title":"At the 26 Oct event: register with a QR code that captures age, gender, ethnicity and postcode, and run the feedback form with a prize draw","owner":"manager","due":"26 Oct","note":"Learn what lifts completion before using it elsewhere."},
+  {"id":"a07","phase":"now","title":"Midpoint review","owner":"baringa","due":"28 Oct","note":"Review the core measures, the map and the platform analysis."},
+  {"id":"a08","phase":"handover","title":"Agree the definitions: unique participant, regular participant, reached, success rate","owner":"manager","due":"By handover","note":"With the Interim CEO and Baringa."},
+  {"id":"a09","phase":"handover","title":"Validate the map with the Programmes and Delivery Manager, Interim CEO and young people","owner":"baringa","due":"By handover","note":"Confirm the website figures for gyms, sessions and programmes."},
+  {"id":"a11","phase":"handover","title":"Move funder agreements and the reporting calendar into Airtable, with an alert 5 days before each report is due","owner":"baringa","due":"After 27 Oct, if time","note":"Strategic work first. Needs edit access to Airtable."},
+  {"id":"a15","phase":"handover","title":"Check the 36% female figure on the impact page against what the records can support","owner":"comms","ownerProposed":true,"due":"By handover","note":"The website says 36% of those registered; interview says gender is recorded for only some."},
+  {"id":"a16","phase":"feb","title":"Decide whether to keep, reconfigure or replace Upshot, including what Airtable could do","owner":"ceo","ownerProposed":true,"due":"Before the contract ends","note":"Interview says 28 February; briefing pack says March. Confirm."},
+  {"id":"a18","phase":"feb","title":"Brief coaches on why data matters, and link the registration QR code to Upshot without double entry","owner":"manager","due":"Next team meeting","note":"Data leads to funding, which keeps the programmes running."},
+  {"id":"a19","phase":"later","title":"Build a live attendance dashboard with a traffic light for each gym and outstanding registers","owner":"data","ownerProposed":true,"due":"Once the core measures are stable","note":"Airtable already holds all the sites."},
+  {"id":"a20","phase":"later","title":"Pilot the monthly wellbeing pulse at one gym, then roll out","owner":"manager","due":"Next quarter","note":"Linked to participant ID."},
+  {"id":"a21","phase":"later","title":"Send the seasonal community survey each spring and summer","owner":"comms","ownerProposed":true,"due":"Spring and summer","note":"Same core questions each time."}
+ ],
+
+ "assumptions":[
+  {"link":"Free gyms to Access","text":"Free, local, welcoming sessions in accessible parks attract and keep people, including groups left out of mainstream sport.","test":"Repeat participation (E3); demographics (R3)"},
+  {"link":"Sessions to Safety and trust","text":"Participants feel safe, including after dark in winter and especially women, so sessions run when people can attend.","test":"Community survey (C1); safety checks (S1)"},
+  {"link":"Safety and trust to Confidence","text":"Consistent coaches build trust, and trust builds confidence and resilience.","test":"Trust and belonging (P3); confidence (P1)"},
+  {"link":"Belonging to reduced violence","text":"A sense of belonging and trusted relationships protect against gang involvement and exploitation. This is a contribution, and evidence must separate sport alone from sport with youth work and targeted support.","test":"Proxy measures agreed with funders; case studies (P4)"},
+  {"link":"Pathway to progression","text":"Steel Works, Futures and Assistants turn confidence into qualifications and paid work.","test":"Starts and completions (G1); destinations (G3)"},
+  {"link":"Data collection","text":"Participants share the minimum data when the reason is explained, and coaches record it when given a clear routine and paid time.","test":"Demographics (R3); registers on time (E4)"}
+ ],
+
+ "reconcile":[
+  {"item":"Number of gyms","says":"Website home page: 7 gyms built. Locations page: six gyms. Home page list and timetable: five parks with public classes plus HMP Brixton (no public access), which makes six","action":"Confirm the seventh. Use 6 (five community parks plus HMP Brixton) until confirmed."},
+  {"item":"Weekly sessions","says":"Website timetable: 20 free sessions a week, four in each of five parks (Built of Steel 13, Future Warriors 5, Steel Sisters 1, Beyond Barriers 1). Impact deck: 27 regular classes. 2024 draft: three gyms, three classes a week each","action":"Use 20 from the live timetable unless Steel Warriors say otherwise."},
+  {"item":"Sessions delivered in 2025","says":"Website: 694 (293 community, 401 targeted). Four timetable sessions are marked new, so today's 20 a week is higher than 2025","action":"Treat 694 as the 2025 baseline."},
+  {"item":"People reached","says":"Website: 20,000+ since 2017 (cumulative). Impact deck: 1,200 young people. Briefing pack: about 1,000 a year and about 500 on Upshot","action":"Agree one annual definition and recalculate from de-duplicated records."},
+  {"item":"Participant profile","says":"Website, 2025 registered: 43% under 18, 19% aged 18 to 25, 36% female; 38% of ages not explained. Interview: about 80% of records lack some demographic detail and the female share counts only those who recorded gender","action":"Label as indicative until demographics are complete."},
+  {"item":"Number of programmes","says":"Website lists 12: Built of Steel, Future Warriors, Steel Sisters, Steel in Schools, Beyond Bars, Beyond Barriers, Steel in Motion, Youth Leadership and Youth Voice, Steel Works, Steel Futures, Steel Assistants, Steel Connections. Interview described 10. The community programme is Built of Steel on the website and Built on Steel in the impact deck","action":"Confirm the list and the name."},
+  {"item":"Social value","says":"Website: estimated 160k pounds per gym in year one and 700k over ten years (National TOMs framework, method on request). The Carpenters Estate TOMs pilot is still in progress","action":"Ask for the method; reconcile with the pilot."},
+  {"item":"98% success and 33% impact growth","says":"Impact deck, with no written calculation","action":"Document the calculation or stop using."},
+  {"item":"Upshot contract end","says":"28 February (interview); March (briefing pack)","action":"Confirm the date."}
+ ],
+
+ "themes":"External research is being gathered across seven themes: trusted relationships; physical activity and wellbeing; sport as violence prevention; community assets and outdoor gyms; employability and progression; social capital and belonging; and trauma-informed practice. Relevant findings will be added to the matching links rather than reported separately.",
+
+ "foot":"Sources: steelwarriors.co.uk (home, classes, impact and programmes pages); interview with the Programmes and Delivery Manager and the follow-up call with the Interim CEO, Communications lead and Programmes and Delivery Manager; stakeholder interview notes; expanded Theory of Change working model; Growth, Impact and Progression 2026; MEL Approach (March 2025); Baringa briefing pack. Figures are as published or reported and have not been independently verified."
+}
+</script>
+
+<script>
+(function(){
+"use strict";
+var D=JSON.parse(document.getElementById("toc-data").textContent);
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+var el=function(tag,attrs,html){var e=document.createElement(tag);for(var k in (attrs||{}))e.setAttribute(k,attrs[k]);if(html!=null)e.innerHTML=html;return e;};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+
+var KEY="sw-toc-v3",store={vals:{},done:{}};
+try{var raw=localStorage.getItem(KEY);if(raw)store=JSON.parse(raw);store.vals=store.vals||{};store.done=store.done||{};}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+
+var st={prog:"all",out:"all",scope:"core",owner:"all",sel:null};
+var nodeById={},stageById={},roleById={},outById={};
+D.nodes.forEach(function(n){nodeById[n.id]=n;});
+D.enablers.forEach(function(n){nodeById[n.id]=n;n.enabler=true;n.outcomes=[];});
+D.stages.forEach(function(s){stageById[s.id]=s;});
+D.roles.forEach(function(r){roleById[r.id]=r;});
+D.outcomes.forEach(function(o){outById[o.id]=o;});
+var READY={ready:"Ready",fix:"Needs fixing",build:"To build"};
+
+function coverage(id){
+  var l=D.indicators.filter(function(i){return i.nodes.indexOf(id)>=0;});
+  if(!l.length)return {lvl:0,list:l};
+  var r=l.filter(function(i){return i.readiness==="ready";}).length;
+  if(r===l.length)return {lvl:2,list:l};
+  if(r>0||l.some(function(i){return i.readiness==="fix";}))return {lvl:1,list:l};
+  return {lvl:0,list:l};
+}
+
+/* nav */
+var SEC=[["map","The change"],["measures","Measures"],["plan","Routine and plan"],["gaps","Figures to reconcile"]];
+function buildNav(){
+  var n=$("#nav");SEC.forEach(function(s){var a=el("a",{href:"#"+s[0]},s[1]);a.dataset.id=s[0];n.appendChild(a);});
+  if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)$$("#nav a").forEach(function(a){a.classList.toggle("on",a.dataset.id===e.target.id);});});},{rootMargin:"-45% 0px -50% 0px"});SEC.forEach(function(s){io.observe($("#"+s[0]));});}
+}
+
+/* chips */
+function chips(host,items,key,onset){
+  var h=$(host);$$(".chip",h).forEach(function(c){c.remove();});
+  items.forEach(function(it){var b=el("button",{class:"chip",type:"button","aria-pressed":st[key]===it.id},esc(it.label));b.onclick=function(){onset(it.id);};h.appendChild(b);});
+}
+function renderProg(){chips("#progFilters",[{id:"all",label:"All"}].concat(D.programmes),"prog",function(v){st.prog=v;renderProg();applyFilter();});}
+function renderOut(){chips("#outFilters",[{id:"all",label:"All"}].concat(D.outcomes.map(function(o){return {id:o.id,label:o.chip};})),"out",function(v){st.out=v;renderOut();applyFilter();renderMeasures();});}
+
+/* map */
+function buildMap(){
+  $("#need").innerHTML='<b>The need</b>'+D.need.map(function(x){return '<span class="n">'+esc(x)+'</span>';}).join("");
+  var cols=$("#cols");cols.innerHTML="";
+  D.stages.forEach(function(s,i){
+    var c=el("div",{class:"col"},'<h4><span>'+String(i+1).padStart(2,"0")+'</span>'+esc(s.label)+'</h4><div class="cs">'+esc(s.sub)+'</div>');
+    var k=el("div",{class:"stack"});
+    D.nodes.filter(function(n){return n.stage===s.id;}).forEach(function(n){k.appendChild(nodeBtn(n));});
+    c.appendChild(k);cols.appendChild(c);
+  });
+  var en=$("#enab");en.innerHTML="";
+  D.enablers.forEach(function(n){var b=el("button",{class:"enab",type:"button","data-id":n.id},'<span class="t">'+esc(n.title)+'</span><span class="d">'+esc(n.short)+'</span>');b.onclick=function(){select(n.id);};en.appendChild(b);});
+  $("#how").textContent=D.how;$("#caveat").textContent=D.caveat;
+}
+function nodeBtn(n){
+  var cv=coverage(n.id),lab=["Not yet measurable","Partly measurable","Measured"][cv.lvl];
+  var b=el("button",{class:"node",type:"button","data-id":n.id},
+    '<span class="t">'+esc(n.title)+'</span><span class="d">'+esc(n.short)+'</span>'+(n.today?'<span class="now">'+esc(n.today)+'</span>':'')+
+    '<span class="cov"><i class="r'+cv.lvl+'"></i>'+lab+'</span>');
+  b.onmouseenter=function(){trace(n.id);};b.onmouseleave=untrace;b.onfocus=function(){trace(n.id);};b.onblur=untrace;b.onclick=function(){select(n.id);};
+  return b;
+}
+var edgeEls=[],tracing=null;
+function drawEdges(){
+  var svg=$("#edges"),map=$("#mapEl");if(getComputedStyle(svg).display==="none")return;
+  var mr=map.getBoundingClientRect();svg.setAttribute("viewBox","0 0 "+mr.width+" "+mr.height);
+  svg.innerHTML='<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>';
+  edgeEls=[];var R={};
+  D.nodes.forEach(function(n){var b=$('.node[data-id="'+n.id+'"]');if(!b)return;var r=b.getBoundingClientRect();R[n.id]={l:r.left-mr.left,r:r.right-mr.left,t:r.top-mr.top,b:r.bottom-mr.top,cx:(r.left+r.right)/2-mr.left,cy:(r.top+r.bottom)/2-mr.top,s:n.stage};});
+  D.edges.forEach(function(e,idx){
+    var a=R[e[0]],b=R[e[1]];if(!a||!b)return;var d;
+    if(a.s===b.s){var up=b.cy<a.cy;d="M"+a.cx+" "+(up?a.t:a.b)+" L"+a.cx+" "+(up?b.b:b.t);}
+    else{var x1=a.r,y1=a.cy,x2=b.l-2,y2=b.cy,dx=Math.max(24,(x2-x1)/2);d="M"+x1+" "+y1+" C"+(x1+dx)+" "+y1+" "+(x2-dx)+" "+y2+" "+x2+" "+y2;}
+    var p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("d",d);p.setAttribute("class","edge");p.setAttribute("marker-end","url(#arr)");
+    svg.appendChild(p);edgeEls.push({idx:idx,el:p,e:e});
+  });
+  refreshHi();applyFilter();
+}
+function chain(id){
+  var ed={},u={},d={};
+  (function w(i,s){D.edges.forEach(function(e,x){if(e[1]===i&&!s[e[0]]){s[e[0]]=1;ed[x]=1;w(e[0],s);}});})(id,u);
+  (function w(i,s){D.edges.forEach(function(e,x){if(e[0]===i&&!s[e[1]]){s[e[1]]=1;ed[x]=1;w(e[1],s);}});})(id,d);
+  var nodes={};nodes[id]=1;Object.keys(u).concat(Object.keys(d)).forEach(function(k){nodes[k]=1;});return {nodes:nodes,edges:ed};
+}
+function trace(id){if(nodeById[id].enabler)return;tracing=chain(id);refreshHi();}
+function untrace(){tracing=null;refreshHi();}
+function refreshHi(){
+  var act=tracing;if(!act&&st.sel&&!nodeById[st.sel].enabler)act=chain(st.sel);
+  $$(".node").forEach(function(b){b.classList.toggle("dim",!!act&&!act.nodes[b.dataset.id]);b.classList.toggle("sel",st.sel===b.dataset.id);});
+  $$(".enab").forEach(function(b){b.classList.toggle("sel",st.sel===b.dataset.id);});
+  edgeEls.forEach(function(x){x.el.classList.toggle("on",!!act&&!!act.edges[x.idx]);x.el.classList.toggle("dim",!!act&&!act.edges[x.idx]);});
+}
+function vis(n){return (st.prog==="all"||!n.programmes||n.programmes.indexOf(st.prog)>=0)&&(st.out==="all"||n.outcomes.indexOf(st.out)>=0);}
+function applyFilter(){
+  $$(".node").forEach(function(b){b.classList.toggle("hide",!vis(nodeById[b.dataset.id]));});
+  edgeEls.forEach(function(x){x.el.style.opacity=(vis(nodeById[x.e[0]])&&vis(nodeById[x.e[1]]))?"":"0.08";});
+}
+
+/* panel */
+function select(id){st.sel=id;renderPanel();refreshHi();$("#stage").classList.add("open");setTimeout(drawEdges,280);if(window.innerWidth<=900)$("#panel").scrollIntoView({behavior:"smooth"});}
+function closePanel(){st.sel=null;$("#stage").classList.remove("open");refreshHi();setTimeout(drawEdges,280);}
+function renderPanel(){
+  var n=nodeById[st.sel],p=$("#panelIn");if(!n)return;
+  var h='<button class="close" type="button" aria-label="Close detail">&times;</button><div class="kick">'+esc(n.enabler?"Underpinning every stage":stageById[n.stage].label)+'</div><h3>'+esc(n.title)+'</h3>';
+  (n.outcomes||[]).forEach(function(o){h+='<span class="pill" title="'+esc(outById[o].title)+'">'+esc(outById[o].chip)+'</span>';});
+  h+='<p>'+esc(n.desc)+'</p>';
+  if(n.today||n.facts){h+='<h5>Steel Warriors today</h5><ul>'+(n.today?'<li><b>'+esc(n.today)+'</b></li>':'')+(n.facts||[]).map(function(f){return '<li>'+esc(f)+'</li>';}).join("")+'</ul>';}
+  var inds=D.indicators.filter(function(i){return i.nodes.indexOf(n.id)>=0;});
+  h+='<h5>How we will know</h5>';
+  h+=inds.length?'<ul>'+inds.map(function(i){return '<li><button class="linkbtn" type="button" data-ind="'+i.id+'">'+i.id+' '+esc(i.name)+'</button> <span class="pill '+i.readiness+'">'+READY[i.readiness]+'</span></li>';}).join("")+'</ul>':'<p style="color:var(--red);font-style:italic">No measure yet. This step cannot be evidenced today.</p>';
+  if(!n.enabler){
+    var inc=D.edges.filter(function(e){return e[1]===n.id;}),out=D.edges.filter(function(e){return e[0]===n.id;});
+    if(inc.length)h+='<h5>Comes from</h5><ul>'+inc.map(function(e){return '<li><button class="linkbtn" type="button" data-go="'+e[0]+'">'+esc(nodeById[e[0]].title)+'</button></li>';}).join("")+'</ul>';
+    if(out.length)h+='<h5>Leads to</h5><ul>'+out.map(function(e){return '<li><button class="linkbtn" type="button" data-go="'+e[1]+'">'+esc(nodeById[e[1]].title)+'</button></li>';}).join("")+'</ul>';
+  }
+  h+='<h5>Source</h5><p>'+esc(n.source)+'</p>';
+  p.innerHTML=h;$(".close",p).onclick=closePanel;
+  $$("[data-go]",p).forEach(function(b){b.onclick=function(){select(b.dataset.go);};});
+  $$("[data-ind]",p).forEach(function(b){b.onclick=function(){gotoInd(b.dataset.ind);};});
+}
+
+/* measures */
+function ragOf(i){
+  var v=store.vals[i.id]||{},c=parseFloat(v.current),t=parseFloat(v.target);
+  if(isNaN(c)||isNaN(t)||t===0)return {k:"n",label:(isNaN(t)||!v.target)?"Set a target":"Add a value"};
+  var pct=i.direction==="down"?(c===0?1:t/c):c/t;
+  return pct>=1?{k:"g",label:"On target"}:pct>=.7?{k:"a",label:"Close"}:{k:"r",label:"Behind"};
+}
+function renderScope(){
+  var nCore=D.indicators.filter(function(i){return i.tier==="core";}).length;
+  chips("#scopeFilters",[{id:"core",label:"Core ("+nCore+")"},{id:"all",label:"All ("+D.indicators.length+")"}],"scope",function(v){st.scope=v;renderScope();renderMeasures();});
+}
+function indVisible(i){return (st.scope==="all"||i.tier==="core")&&(st.out==="all"||i.outcomes.indexOf(st.out)>=0);}
+function renderMeasures(){
+  var host=$("#inds"),open={};$$(".ind",host).forEach(function(a){if(!$(".ind-body",a).hidden)open[a.dataset.id]=1;});
+  host.innerHTML="";var shown=0;
+  D.domains.forEach(function(dm){
+    var list=D.indicators.filter(function(i){return i.domain===dm.id&&indVisible(i);});if(!list.length)return;
+    host.appendChild(el("div",{class:"dom-h"},'<h3>'+esc(dm.label)+'</h3>'));
+    list.forEach(function(i){host.appendChild(indCard(i,!!open[i.id]));shown++;});
+  });
+  $("#indCount").textContent="Showing "+shown+" of "+D.indicators.length+" measures"+(st.out!=="all"?" for outcome: "+outById[st.out].chip:"")+".";
+  if(!shown)host.innerHTML='<p class="lede">No measures match this filter.</p>';
+}
+function indCard(i,isOpen){
+  var v=store.vals[i.id]||{},r=ragOf(i);
+  var a=el("article",{class:"ind "+i.tier,id:"ind-"+i.id});a.dataset.id=i.id;
+  a.innerHTML='<div class="ind-row"><button class="ind-head" type="button" aria-expanded="'+isOpen+'"><span class="ind-id">'+i.id+'</span><span class="ind-name">'+esc(i.name)+'</span>'+
+   (i.tier==="core"?'<span class="pill core">Core</span>':'')+'<span class="pill '+i.readiness+'">'+READY[i.readiness]+'</span><span class="ind-caret">'+(isOpen?"Hide":"Detail")+'</span></button>'+
+   '<div class="vals"><label>Current<input type="number" step="any" inputmode="decimal" data-f="current" value="'+esc(v.current||"")+'" aria-label="Current value for '+esc(i.name)+'"></label>'+
+   '<label>Target<input type="number" step="any" inputmode="decimal" data-f="target" value="'+esc(v.target||"")+'" aria-label="Target for '+esc(i.name)+'"></label>'+
+   '<span class="unit">'+esc(i.unit)+'</span><span class="rag '+r.k+'" role="status"><i></i><span>'+r.label+'</span></span></div></div>'+
+   '<dl class="ind-body" '+(isOpen?'':'hidden')+'><div class="wide"><dt>Why it matters</dt><dd>'+esc(i.why)+'</dd></div>'+
+   '<div><dt>Definition</dt><dd>'+esc(i.definition)+'</dd></div>'+
+   '<div><dt>Where we are today</dt><dd>'+esc(i.baseline)+'</dd></div>'+
+   '<div><dt>Proposed target (to agree)</dt><dd>'+esc(i.proposal)+'</dd></div>'+
+   '<div><dt>Source and routine</dt><dd>'+esc(i.source)+'. Collected by '+esc(roleById[i.collector].label.toLowerCase())+', '+esc(i.frequency.toLowerCase())+'. Accountable: '+esc(roleById[i.owner].label)+'.</dd></div></dl>';
+  var hd=$(".ind-head",a),bd=$(".ind-body",a);
+  hd.onclick=function(){var o=bd.hidden;bd.hidden=!o;hd.setAttribute("aria-expanded",o);$(".ind-caret",a).textContent=o?"Hide":"Detail";};
+  $$("input",a).forEach(function(inp){inp.oninput=function(){store.vals[i.id]=store.vals[i.id]||{};store.vals[i.id][inp.dataset.f]=inp.value;save();var rr=ragOf(i),rg=$(".rag",a);rg.className="rag "+rr.k;$("span",rg).textContent=rr.label;};});
+  return a;
+}
+function gotoInd(id){
+  var i=D.indicators.filter(function(x){return x.id===id;})[0];
+  if(st.out!=="all"||(st.scope==="core"&&i.tier!=="core")){st.out="all";st.scope="all";renderOut();renderScope();applyFilter();renderMeasures();}
+  var a=$("#ind-"+id);if(!a)return;if($(".ind-body",a).hidden)$(".ind-head",a).click();
+  a.scrollIntoView({behavior:"smooth",block:"center"});a.style.outline="3px solid var(--red)";setTimeout(function(){a.style.outline="";},1800);
+}
+function csvCell(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function exportCsv(){
+  var rows=[["ID","Measure","Priority","Readiness","Unit","Where we are today","Current","Target","Status","Source","Collected by","Frequency","Accountable"]];
+  D.indicators.forEach(function(i){var v=store.vals[i.id]||{};rows.push([i.id,i.name,i.tier==="core"?"Core":"Next",READY[i.readiness],i.unit,i.baseline,v.current||"",v.target||"",ragOf(i).label,i.source,roleById[i.collector].label,i.frequency,roleById[i.owner].label]);});
+  var csv=rows.map(function(r){return r.map(csvCell).join(",");}).join("\r\n");
+  try{var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="steel-warriors-measures.csv";document.body.appendChild(a);a.click();a.remove();}
+  catch(e){window.prompt("Copy this CSV",csv);}
+}
+
+/* plan */
+function renderOwn(){chips("#ownFilters",[{id:"all",label:"Everyone"}].concat(D.roles),"owner",function(v){st.owner=v;renderOwn();renderActions();});}
+function renderActions(){
+  var host=$("#acts");host.innerHTML="";
+  D.phases.forEach(function(ph){
+    var list=D.actions.filter(function(a){return a.phase===ph.id&&(st.owner==="all"||a.owner===st.owner);});if(!list.length)return;
+    var d=el("div",{class:"phase"},'<h3>'+esc(ph.label)+'</h3><div class="ph">'+esc(ph.d)+'</div>');
+    list.forEach(function(a){
+      var row=el("div",{class:"act"+(store.done[a.id]?" done":"")},
+        '<input type="checkbox" id="chk-'+a.id+'" '+(store.done[a.id]?"checked":"")+' aria-label="Mark done: '+esc(a.title)+'">'+
+        '<label for="chk-'+a.id+'"><span class="at">'+esc(a.title)+'</span><span class="am">'+esc(a.note)+'</span></label>'+
+        '<div class="ad">'+esc(a.due)+'<small>'+esc(roleById[a.owner].label)+(a.ownerProposed?"*":"")+'</small></div>');
+      $("input",row).onchange=function(e){store.done[a.id]=e.target.checked;save();row.classList.toggle("done",e.target.checked);updateProg();};
+      d.appendChild(row);
+    });
+    host.appendChild(d);
+  });
+  updateProg();
+}
+function updateProg(){var n=D.actions.filter(function(a){return store.done[a.id];}).length;$("#actTxt").textContent=n+" of "+D.actions.length+" actions complete";$("#actBar").style.width=(n/D.actions.length*100)+"%";}
+
+/* boot */
+function boot(){
+  $("#purpose").textContent=D.purpose;
+  $("#facts").innerHTML=D.facts.map(function(f){return '<div class="fact"><b>'+esc(f.n)+'</b><span>'+esc(f.t)+'</span></div>';}).join("");
+  $("#factsrc").textContent=D.factsrc;
+  var s=D.session;
+  $("#session").innerHTML='<div><b>Before</b><span class="big">'+esc(s.before.t)+'</span>'+esc(s.before.d)+'</div><div><b>During</b><span class="big">'+esc(s.during.t)+'</span>'+esc(s.during.d)+'</div><div><b>After</b><span class="big">'+esc(s.after.t)+'</span>'+esc(s.after.d)+'</div>';
+  $("#tblRec").innerHTML='<thead><tr><th>Item</th><th>What the sources say</th><th>Next step</th></tr></thead><tbody>'+D.reconcile.map(function(x){return '<tr><td><b>'+esc(x.item)+'</b></td><td>'+esc(x.says)+'</td><td>'+esc(x.action)+'</td></tr>';}).join("")+'</tbody>';
+  $("#tblAssump").innerHTML='<thead><tr><th>Link</th><th>What has to be true</th><th>How we will test it</th></tr></thead><tbody>'+D.assumptions.map(function(a){return '<tr><td>'+esc(a.link)+'</td><td>'+esc(a.text)+'</td><td class="m">'+esc(a.test)+'</td></tr>';}).join("")+'</tbody>';
+  $("#themes").textContent=D.themes;$("#foot").textContent=D.foot;
+  buildNav();renderProg();renderOut();buildMap();renderScope();renderMeasures();renderOwn();renderActions();
+  $("#exportCsv").onclick=exportCsv;
+  $("#resetVals").onclick=function(){var b=$("#resetVals");if(b.dataset.arm){store.vals={};save();delete b.dataset.arm;b.textContent="Clear my entries";renderMeasures();}else{b.dataset.arm=1;b.textContent="Click again to confirm";setTimeout(function(){delete b.dataset.arm;b.textContent="Clear my entries";},3500);}};
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&st.sel)closePanel();});
+  var rz;window.addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(drawEdges,80);});
+  drawEdges();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawEdges);
+  window.addEventListener("load",drawEdges);
+}
+boot();
+})();
+</script>
+</body>
+</html>
